@@ -27,22 +27,10 @@ class LinearRegression():
         self.coef_ = np.random.randn(X.shape[1])
         self.intercept_ = np.zeros(1)
 
-        # perform training
-        for epoch in range(self.epochs):
-            y_pred = X @ self.coef_ + self.intercept_
-            loss = 0.5 * np.sum((y_pred-y)**2)
-
-            # compute gradients
-            dW = X.T @ (y_pred-y)
-            db = np.mean(y_pred-y)
-
-            # update parameters
-            self.coef_-=self.learning_rate * dW
-            self.intercept_-=self.learning_rate * db
-
-            if epoch%10==0:
-                print(f"Epoch {epoch+1}/{self.epochs}, Loss: {loss}, W: {self.coef_}, b: {self.intercept_}")
-
+        # apply closed form (instead of GD training)
+        self.coef_ = np.linalg.inv(X.T @ X) @ X.T @ y
+        self.intercept_ = np.mean(y - X @ self.coef_)
+        
     def predict(self,X_test):
         return X_test @ self.coef_ + self.intercept_
 
