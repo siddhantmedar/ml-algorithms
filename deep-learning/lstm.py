@@ -13,7 +13,6 @@ learning_rate = 0.01  # scalar
 epochs = 100  # scalar
 
 ct_prev = np.zeros(hidden_dim)  # [hidden_dim]
-h_prev = np.zeros(hidden_dim)  # [hidden_dim]
 
 # forget
 W_f = np.random.randn(hidden_dim, input_dim)  # [hidden_dim, input_dim]
@@ -48,8 +47,9 @@ def sigmoid(x):
 
 
 for epoch in range(epochs):  # scalar
-
+    
     # structures - per epoch
+    h_prev = np.zeros(hidden_dim)  # [hidden_dim]
     hidden_states = []  # will contain tensors of shape [hidden_dim]
     outputs = []  # will contain tensors of shape [output_dim]
     loss = []  # will contain scalar values
@@ -158,7 +158,7 @@ for epoch in range(epochs):  # scalar
 
         db_hy += dy  # [output_dim]
 
-    # update parameters - to be implemented
+    # update parameters
     W_f -= learning_rate * dW_f  # [hidden_dim, input_dim]
     U_f -= learning_rate * dU_f  # [hidden_dim, hidden_dim]
     b_f -= learning_rate * db_f  # [hidden_dim]
