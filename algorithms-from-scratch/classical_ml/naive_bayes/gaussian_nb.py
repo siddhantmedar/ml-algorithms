@@ -5,22 +5,22 @@ np.random.seed(313)
 
 
 n_samples, n_features = 1000, 3
-X = np.random.randint(0, 100, (n_samples, n_features))
-y = np.random.randint(0, 2, X.shape[0])
+X = np.random.randn(n_samples, n_features)
+y = np.random.randint(0, 2, n_samples)
 
-split_ratio = int(0.90 * X.shape[0])
+split_ratio = int(0.90 * n_samples)
 
 X_train, y_train = X[:split_ratio], y[:split_ratio]
 X_test, y_test = X[split_ratio:], y[split_ratio:]
 
 
-class MultinomialNaiveBayes:
+class GaussianNaiveBayes:
     def __init__(self,alpha=1):
         self.prior_probs = None
         self.classes = None
-        self.conditional_probs = None
         self.n_features = None
-        self.alpha = alpha
+        self.mean = None
+        self.var = None
 
     def fit(self, X, y):
         self.n_features = X.shape[1]
@@ -31,13 +31,13 @@ class MultinomialNaiveBayes:
         self.conditional_probs = np.zeros((len(self.classes),self.n_features))
 
         # compute conditional probabilities
+        self.mean = np.zeros((len(self.classes),self.n_features))
+        self.var = np.zeros((len(self.classes),self.n_features))
+
         for c in self.classes:
             class_points = X[y == c]
-            w_y = (class_points.sum(axis=0) + self.alpha) / (
-                np.sum(class_points) + self.alpha * self.n_features
-            )
-
-            self.conditional_probs[c] = w_y
+            self.mean[c] = np.mean(class_points,axis=0)
+            self.var[c] = np.var(class_points,axis=0)
 
     def predict(self, X):
         y_pred = []
@@ -47,7 +47,7 @@ class MultinomialNaiveBayes:
 
             for c in self.classes:
                 log_prior = np.log(self.prior_probs[c])
-                log_likelihood = np.sum(x * np.log(self.conditional_probs[c]))
+                log_likelihood = -0.5 * np.sum(np.log((2*np.pi*self.var[c])) + (x-self.mean[c])**2 / self.var[c])
                 log_probs.append(log_prior + log_likelihood)
 
             y_pred.append(np.argmax(log_probs))
@@ -60,7 +60,7 @@ def compute_accuracy(y_true,y_pred):
 
 
 if __name__ == "__main__":
-    nb = MultinomialNaiveBayes()
+    nb = GaussianNaiveBayes()
     nb.fit(X_train, y_train)
     y_pred = nb.predict(X_test)
 
