@@ -37,7 +37,7 @@ class DecisionTree:
         return np.array([self._traverse_tree(x, self.root) for x in X_test])
 
     def _compute_mse(self, y):
-        return np.mean((y-np.mean(y))**2)
+        return np.mean((y - np.mean(y)) ** 2)
 
     def _best_split(self, X, y):
         best_feature = None
@@ -130,13 +130,16 @@ class DecisionTree:
 
 
 def compute_mse(y_true, y_pred):
-    return np.mean((y_true-y_pred)**2)
+    return np.mean((y_true - y_pred) ** 2)
+
 
 def compute_rmse(y_true, y_pred):
-    return np.sqrt(np.mean((y_true-y_pred)**2))
+    return np.sqrt(np.mean((y_true - y_pred) ** 2))
+
 
 def compute_mae(y_true, y_pred):
-    return np.mean(np.abs(y_true-y_pred))
+    return np.mean(np.abs(y_true - y_pred))
+
 
 #  TODO: add r2_score implementation
 

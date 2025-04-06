@@ -34,7 +34,7 @@ class DecisionTree:
         self.root = self._build_tree(X, y)
 
     def predict(self, X_test):
-        return np.array([self._traverse_tree(x,self.root) for x in X_test])
+        return np.array([self._traverse_tree(x, self.root) for x in X_test])
 
     def _compute_entropy(self, y):
         _, class_counts = np.unique(y, return_counts=True)
@@ -77,7 +77,11 @@ class DecisionTree:
         node = TreeNode()
 
         # If all labels are the same, or the stopping criteria are met, make it a leaf node
-        if np.unique(y).shape[0] == 1 or y.shape[0] <= self.min_samples_split or (self.max_depth and depth >= self.max_depth):
+        if (
+            np.unique(y).shape[0] == 1
+            or y.shape[0] <= self.min_samples_split
+            or (self.max_depth and depth >= self.max_depth)
+        ):
             node.class_prediction = np.bincount(y).argmax()
             return node
 
@@ -86,29 +90,29 @@ class DecisionTree:
         if feature is None:
             node.class_prediction = np.bincount(y).argmax()
             return node
-        
+
         node.feature_index = feature
         node.threshold = threshold
 
         left_mask = X[:, feature] <= threshold
         right_mask = X[:, feature] > threshold
 
-        node.left_child = self._build_tree(X[left_mask], y[left_mask],depth+1)
-        node.right_child = self._build_tree(X[right_mask], y[right_mask],depth+1)
+        node.left_child = self._build_tree(X[left_mask], y[left_mask], depth + 1)
+        node.right_child = self._build_tree(X[right_mask], y[right_mask], depth + 1)
 
         return node
 
-    def _traverse_tree(self,x,node):
+    def _traverse_tree(self, x, node):
         # base case
         if node.class_prediction is not None:
             return node.class_prediction
-        
-        if x[node.feature_index] <= node.threshold:
-            return self._traverse_tree(x,node.left_child)
-        else:
-            return self._traverse_tree(x,node.right_child)
 
-    def print_tree(self,node=None,depth=0):
+        if x[node.feature_index] <= node.threshold:
+            return self._traverse_tree(x, node.left_child)
+        else:
+            return self._traverse_tree(x, node.right_child)
+
+    def print_tree(self, node=None, depth=0):
         if node is None:
             node = self.root
 
@@ -117,22 +121,27 @@ class DecisionTree:
         if node.class_prediction is not None:
             print(f"{indent}Predict: {node.class_prediction}")
             return
-        
-        print(f"{indent}Feature {feature_names[node.feature_index]} <= {node.threshold:.2f}")
+
+        print(
+            f"{indent}Feature {feature_names[node.feature_index]} <= {node.threshold:.2f}"
+        )
         self.print_tree(node.left_child, depth + 1)
-        print(f"{indent}Feature {feature_names[node.feature_index]} > {node.threshold:.2f}")
+        print(
+            f"{indent}Feature {feature_names[node.feature_index]} > {node.threshold:.2f}"
+        )
         self.print_tree(node.right_child, depth + 1)
 
-def accuracy(y_true,y_pred):
-    return np.sum(y_true==y_pred)/y_true.shape[0]
+
+def accuracy(y_true, y_pred):
+    return np.sum(y_true == y_pred) / y_true.shape[0]
 
 
 if __name__ == "__main__":
     model = DecisionTree()
-    model.fit(X_train, y_train) # train model
-    
+    model.fit(X_train, y_train)  # train model
+
     model.print_tree()
-    
+
     y_pred = model.predict(X_test)
 
-    print(accuracy(y_test,y_pred))
+    print(accuracy(y_test, y_pred))
