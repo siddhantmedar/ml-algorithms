@@ -15,7 +15,7 @@ X_test, y_test = X[split_ratio:], y[split_ratio:]
 
 
 class MultinomialNaiveBayes:
-    def __init__(self,alpha=1):
+    def __init__(self, alpha=1):
         self.prior_probs = None
         self.classes = None
         self.conditional_probs = None
@@ -28,7 +28,7 @@ class MultinomialNaiveBayes:
 
         # compute prior probabilities
         self.prior_probs = np.bincount(y) / len(y)
-        self.conditional_probs = np.zeros((len(self.classes),self.n_features))
+        self.conditional_probs = np.zeros((len(self.classes), self.n_features))
 
         # compute conditional probabilities
         for c in self.classes:
@@ -55,7 +55,7 @@ class MultinomialNaiveBayes:
         return np.array(y_pred)
 
 
-def compute_accuracy(y_true,y_pred):
+def compute_accuracy(y_true, y_pred):
     return np.mean(y_true == y_pred)
 
 

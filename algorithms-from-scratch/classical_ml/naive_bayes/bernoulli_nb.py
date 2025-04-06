@@ -5,7 +5,7 @@ np.random.seed(313)
 
 
 n_samples, n_features = 1000, 3
-X = np.random.randint(0,2,(n_samples, n_features))
+X = np.random.randint(0, 2, (n_samples, n_features))
 y = np.random.randint(0, 2, n_samples)
 
 split_ratio = int(0.90 * n_samples)
@@ -35,6 +35,7 @@ class BernoulliNaiveBayes:
                 len(class_points) + self.alpha * 2
             )
             self.conditional_probs[c] = p_c + 1e-9
+
     def predict(self, X):
         y_pred = []
 
@@ -45,8 +46,9 @@ class BernoulliNaiveBayes:
                 log_prior = np.log(self.prior_probs[c])
                 log_likelihood = np.sum(
                     x * np.log(self.conditional_probs[c])
-                    + (1 - x) * np.log(1-self.conditional_probs[c]))
-                
+                    + (1 - x) * np.log(1 - self.conditional_probs[c])
+                )
+
                 log_probs.append(log_prior + log_likelihood)
 
             y_pred.append(np.argmax(log_probs))

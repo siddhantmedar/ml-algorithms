@@ -28,15 +28,15 @@ class GaussianNaiveBayes:
 
         # compute prior probabilities
         self.prior_probs = np.bincount(y) / len(y)
-        
+
         # compute conditional probabilities
-        self.mean = np.zeros((len(self.classes),self.n_features))
-        self.var = np.zeros((len(self.classes),self.n_features))
+        self.mean = np.zeros((len(self.classes), self.n_features))
+        self.var = np.zeros((len(self.classes), self.n_features))
 
         for c in self.classes:
             class_points = X[y == c]
-            self.mean[c] = np.mean(class_points,axis=0)
-            self.var[c] = np.var(class_points,axis=0)
+            self.mean[c] = np.mean(class_points, axis=0)
+            self.var[c] = np.var(class_points, axis=0)
 
     def predict(self, X):
         y_pred = []
@@ -46,7 +46,10 @@ class GaussianNaiveBayes:
 
             for c in self.classes:
                 log_prior = np.log(self.prior_probs[c])
-                log_likelihood = -0.5 * np.sum(np.log((2*np.pi*self.var[c])) + (x-self.mean[c])**2 / self.var[c])
+                log_likelihood = -0.5 * np.sum(
+                    np.log((2 * np.pi * self.var[c]))
+                    + (x - self.mean[c]) ** 2 / self.var[c]
+                )
                 log_probs.append(log_prior + log_likelihood)
 
             y_pred.append(np.argmax(log_probs))
@@ -54,7 +57,7 @@ class GaussianNaiveBayes:
         return np.array(y_pred)
 
 
-def compute_accuracy(y_true,y_pred):
+def compute_accuracy(y_true, y_pred):
     return np.mean(y_true == y_pred)
 
 

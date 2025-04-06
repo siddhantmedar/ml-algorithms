@@ -46,15 +46,15 @@ def sigmoid(x):
 
 
 for epoch in range(epochs):  # scalar
-    
+
     # structures - per epoch
     h_prev = np.zeros(hidden_dim)  # [hidden_dim]
     hidden_states = []  # will contain tensors of shape [hidden_dim]
     outputs = []  # will contain tensors of shape [output_dim]
     loss = []  # will contain scalar values
 
-    z_s, r_s, g_s = [],[],[]
-    
+    z_s, r_s, g_s = [], [], []
+
     # forward pass
     for t in range(timestamps):  # scalar
         z_t = sigmoid(W_z @ x[t] + U_z @ h_prev + b_z)  # [hidden_dim]
@@ -96,13 +96,13 @@ for epoch in range(epochs):  # scalar
 
     # backward pass
     for t in list(reversed(range(timestamps))):  # scalar
-        
+
         z_t = z_s[t]
         r_t = r_s[t]
         g_t = g_s[t]
         h_t = hidden_states[t]
-        h_prev = hidden_states[t-1] if t>0 else np.zeros_like(h_prev)
-        
+        h_prev = hidden_states[t - 1] if t > 0 else np.zeros_like(h_prev)
+
         # from output layer
         dy = outputs[t] - y_true[t]  # [output_dim]
         dW_hy += np.outer(dy, h_t)  # [output_dim, hidden_dim]
@@ -131,7 +131,7 @@ for epoch in range(epochs):  # scalar
 
         # update gate
         dpreact_z = dz_t * z_t * (1 - z_t)  # [hidden_dim]
-        dW_z += np.outer(dpreact_z,x[t])  # [hidden_dim,input_dim]
+        dW_z += np.outer(dpreact_z, x[t])  # [hidden_dim,input_dim]
         dU_z += np.outer(dpreact_z, h_prev)  # [hidden_dim,hidden_dim]
         db_z += dpreact_z
         dh_prev += U_z @ dpreact_z  # [hidden_dim] -> (h_t-1(4))

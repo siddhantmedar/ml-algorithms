@@ -38,7 +38,9 @@ b_hy = np.zeros(output_dim)  # [output_dim]
 
 # data
 x = np.random.randn(timestamps, input_dim)  # [timestamps, input_dim]
-y_true = np.array([np.random.randint(0, 2, output_dim) for _ in range(timestamps)])  # [timestamps, output_dim]
+y_true = np.array(
+    [np.random.randint(0, 2, output_dim) for _ in range(timestamps)]
+)  # [timestamps, output_dim]
 
 
 # activation function
@@ -47,14 +49,21 @@ def sigmoid(x):
 
 
 for epoch in range(epochs):  # scalar
-    
+
     # structures - per epoch
     h_prev = np.zeros(hidden_dim)  # [hidden_dim]
     hidden_states = []  # will contain tensors of shape [hidden_dim]
     outputs = []  # will contain tensors of shape [output_dim]
     loss = []  # will contain scalar values
 
-    f_s, i_s, o_s, g_s, c_s, h_s = [], [], [], [], [], []  # will contain tensors of shape [hidden_dim]
+    f_s, i_s, o_s, g_s, c_s, h_s = (
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    )  # will contain tensors of shape [hidden_dim]
 
     # forward pass
     for t in range(timestamps):  # scalar

@@ -13,7 +13,9 @@ epochs = 100  # scalar
 
 # data
 x = np.random.randn(timestamps, input_dim)  # [timestamps, input_dim]
-y_true = np.array([np.random.randint(0, 2, output_dim) for _ in range(timestamps)])  # [timestamps, output_dim]
+y_true = np.array(
+    [np.random.randint(0, 2, output_dim) for _ in range(timestamps)]
+)  # [timestamps, output_dim]
 
 # weights
 W_xh = np.random.randn(hidden_dim, input_dim)  # [hidden_dim, input_dim]
@@ -22,7 +24,9 @@ W_hy = np.random.randn(output_dim, hidden_dim)  # [output_dim, hidden_dim]
 
 # training loop
 for epoch in range(epochs):  # scalar
-    h_prev = np.zeros(hidden_dim,)  # [hidden_dim] - prev hidden state
+    h_prev = np.zeros(
+        hidden_dim,
+    )  # [hidden_dim] - prev hidden state
 
     # structures - per epoch
     hidden_states = []  # Will store tensors of shape [hidden_dim]
@@ -40,7 +44,7 @@ for epoch in range(epochs):  # scalar
         # W_hh @ h_prev = [hidden_dim, hidden_dim] @ [hidden_dim] = [hidden_dim]
         # The addition is [hidden_dim] + [hidden_dim] = [hidden_dim]
         h_t = np.tanh(W_xh @ x[t] + W_hh @ h_prev)  # [hidden_dim]
-        
+
         # W_hy @ h_t = [output_dim, hidden_dim] @ [hidden_dim] = [output_dim]
         y_t = W_hy @ h_t  # [output_dim]
 
@@ -57,22 +61,22 @@ for epoch in range(epochs):  # scalar
     # backward pass
     for t in list(reversed(range(timestamps))):  # scalar
         dy = outputs[t] - y_true[t]  # [output_dim] - [output_dim] = [output_dim]
-        
+
         # W_hy.T @ dy = [hidden_dim, output_dim] @ [output_dim] = [hidden_dim]
         dh = W_hy.T @ dy  # [hidden_dim]
-        
+
         # np.outer(dy, hidden_states[t]) = [output_dim] ⊗ [hidden_dim] = [output_dim, hidden_dim]
         dW_hy += np.outer(dy, hidden_states[t])  # [output_dim, hidden_dim]
-        
+
         # 1 - hidden_states[t] ** 2 = 1 - [hidden_dim]**2 = [hidden_dim]
         tanh_grad = 1 - hidden_states[t] ** 2  # [hidden_dim]
-        
+
         # dh * tanh_grad = [hidden_dim] * [hidden_dim] = [hidden_dim] (elementwise)
         dz = dh * tanh_grad  # [hidden_dim]
-        
+
         # np.outer(dz, x[t]) = [hidden_dim] ⊗ [input_dim] = [hidden_dim, input_dim]
         dW_xh += np.outer(dz, x[t])  # [hidden_dim, input_dim]
-        
+
         if t > 0:
             # np.outer(dz, hidden_states[t-1]) = [hidden_dim] ⊗ [hidden_dim] = [hidden_dim, hidden_dim]
             dW_hh += np.outer(dz, hidden_states[t - 1])  # [hidden_dim, hidden_dim]
@@ -84,10 +88,10 @@ for epoch in range(epochs):  # scalar
     # update parameters
     # W_xh and dW_xh both [hidden_dim, input_dim]
     W_xh -= learning_rate * dW_xh  # [hidden_dim, input_dim]
-    
+
     # W_hh and dW_hh both [hidden_dim, hidden_dim]
     W_hh -= learning_rate * dW_hh  # [hidden_dim, hidden_dim]
-    
+
     # W_hy and dW_hy both [output_dim, hidden_dim]
     W_hy -= learning_rate * dW_hy  # [output_dim, hidden_dim]
 
