@@ -31,7 +31,7 @@ print(f"Training data shape: {X_train.shape}, Training labels shape: {y_train.sh
 print(f"Testing data shape: {X_test.shape}, Testing labels shape: {y_test.shape}")
 
 
-class SVM:
+class SVMClassifier:
     def __init__(self, learning_rate=0.01, epochs=1000):
         self.w = None
         self.b = 0.0
@@ -106,13 +106,13 @@ def accuracy(y_true, y_pred):
 
 
 if __name__ == "__main__":
-    svm = SVM()
+    svm = SVMClassifier()
     svm.fit(X_train, y_train)
     y_pred = svm.predict(X_test)
     acc = accuracy(y_test, y_pred)
     print(f"Accuracy: {acc:.2f}")
 
-    # Visualize the decision boundary
+    # visualize the decision boundary
     plt.scatter(X_test[:, 0], X_test[:, 1], c=y_test, cmap="bwr", alpha=0.7)
     x_min, x_max = X_test[:, 0].min() - 1, X_test[:, 0].max() + 1
     y_min, y_max = X_test[:, 1].min() - 1, X_test[:, 1].max() + 1
